@@ -1,0 +1,5 @@
+phase,profiler_seconds,profiler_share_%,wallclock_seconds,wallclock_share_%
+data_loading,1.13,1.4,1.18,1.5
+forward,33.8,42.8,33.86,42.8
+backward,41.84,53.0,41.89,52.9
+optimizer_step,2.16,2.7,2.21,2.8

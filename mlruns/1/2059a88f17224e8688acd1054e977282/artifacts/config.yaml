@@ -1,0 +1,23 @@
+seed: 42
+
+data:
+  root: ./data
+  batch_size: 64
+  num_workers: 2
+
+train:
+  epochs: 1
+  optimizer: sgd          # sgd or adam
+  lr: 0.05
+  momentum: 0.9
+  weight_decay: 0.0005
+  scheduler: cosine       # none, step, cosine, plateau
+  accum_steps: 1          # used in Task 6
+
+checkpoint:
+  dir: ./checkpoints
+  resume: null            # path to a .pt file to resume (Task 7)
+
+mlflow:
+  experiment_name: lab6_training
+  run_name: baseline

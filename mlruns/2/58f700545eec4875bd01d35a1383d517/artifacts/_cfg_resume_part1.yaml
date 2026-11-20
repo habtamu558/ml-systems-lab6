@@ -1,0 +1,22 @@
+checkpoint:
+  dir: ./checkpoints
+  resume: null
+data:
+  batch_size: 128
+  num_workers: 2
+  root: ./data
+  train_subset: null
+mlflow:
+  experiment_name: lab6_fmnist
+  run_name: resume_part1
+model:
+  name: cnn
+seed: 42
+train:
+  accum_steps: 1
+  epochs: 3
+  lr: 0.001
+  momentum: 0.9
+  optimizer: adam
+  scheduler: none
+  weight_decay: 0.0

@@ -1,0 +1,27 @@
+seed: 42
+
+model:
+  name: cnn               # mlp, cnn, or attention (use your best Lab 3 model)
+
+data:
+  root: ./data
+  batch_size: 128
+  num_workers: 2
+  train_subset: null      # e.g. 10000 to use fewer training images
+
+train:
+  epochs: 5
+  optimizer: adam         # sgd or adam
+  lr: 0.001
+  momentum: 0.9           # only used by sgd
+  weight_decay: 0.0
+  scheduler: none         # none, step, cosine, plateau
+  accum_steps: 1          # used in Task 6
+
+checkpoint:
+  dir: ./checkpoints
+  resume: null            # path to a .pt file to resume (Task 7)
+
+mlflow:
+  experiment_name: lab6_fmnist
+  run_name: cnn_adam_baseline
