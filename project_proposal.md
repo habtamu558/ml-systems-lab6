@@ -1,34 +1,63 @@
-# Individual Project Proposal: A Compact CIFAR-10 Classifier for CPU Deployment
+# Project Proposal
 
-**Student:** Habtamu  **Student ID:** 70568  **Date:** 20 November 2026
+**Title:** Lightweight Coffee Bean Roast-Level Classification: Comparing MLP, CNN and Attention Models Under Edge Latency and Size Budget
+
+**Name:** Habtamu Teshome 
+**Student ID:** 70568
 
 ## Problem
-
-Image classifiers that reach good accuracy are usually too large and too slow for edge devices. This project builds a small image classifier that runs on an ordinary CPU, with no GPU, and still stays accurate. The goal is to take a large, accurate "teacher" network and compress its knowledge into a much smaller "student" network that meets strict size and speed limits.
+Coffee roast level (green, light, medium, dark) is usually checked by eye, so the result can change from person to person. I want to build a small image classifier that could run on a cheap device such as a Raspberry Pi or a phone. In this project I will compare three types of models (MLP, CNN and attention) and see which one gives the best accuracy while staying small and fast.
 
 ## Dataset
+I plan to use the public Coffee Bean Dataset from Kaggle, which has 4 classes: Green, Light, Medium and Dark. I will check the exact number of images and the license on the dataset page. The plan is:
 
-CIFAR-10: 60,000 colour images of 32×32 pixels in 10 classes (50,000 for training, 10,000 for testing). I will hold out 5,000 training images for validation and use the 10,000 test images only for the final results. The dataset is public and downloads through `torchvision`.
+- Keep the official test set untouched.
+- Split the training images into train and validation, stratified.
+- Resize the images to 64×64.
+- Use simple augmentation (flip, small rotation) on the training data only.
+- Check for duplicate images, as I did in Lab 4.
 
 ## Success Metric
-
-The primary metric is top-1 accuracy on the CIFAR-10 test set. The project succeeds if the final compressed model reaches **≥ 85% test accuracy** (minimum acceptable result: 80%) while meeting both deployment constraints below. I will also report how much accuracy the compression costs compared with the teacher.
+- Test accuracy and F1 score. I hope to reach about 90% or more, but I will report whatever I get.
+- A confusion matrix, because I expect Light and Medium to be confused.
+- Number of parameters, model size and latency for each model.
 
 ## Deployment Constraints
-
-| Constraint | Limit | How it will be measured |
-|---|---|---|
-| Inference latency | ≤ 50 ms per image | Batch size 1 on my CPU, median of 1,000 runs after a 100-run warm-up |
-| Model size | ≤ 5 MB | Size of the saved model file on disk |
+- Latency of 50 ms or less per image on CPU (batch size 1).
+- Model size of 5 MB or less.
 
 ## Planned Optimization
+I will build three models with a similar number of parameters, like in Lab 3:
 
-1. **Teacher:** train a larger CNN (ResNet-style) to get a strong accuracy reference.
-2. **Knowledge distillation:** train a small student CNN (about 0.3 million parameters) using the teacher's soft predictions (temperature T = 4) mixed with the normal label loss. I will compare it with the same student trained without distillation to show the benefit.
-3. **Quantization:** apply post-training static int8 quantization to the student to reduce file size and CPU latency further.
+1. **MLP:** a few Linear and ReLU layers.
+2. **CNN:** two or three Conv and MaxPool blocks, then a Linear layer.
+3. **Attention:** split the image into patches and use a small Transformer encoder.
 
-If time allows, I will add light pruning as an extra experiment.
+Then I will apply **quantization (INT8)** to the models and compare the FP32 and INT8 versions on accuracy, size and latency. If quantization works well and I have time left, I may try pruning or distillation, but that is optional.
 
-## Evaluation Plan
+## Tools
+- **PyTorch and torchvision** for models and training.
+- **YAML config and a fixed seed** so the runs can be repeated (Lab 6).
+- **MLflow** to record parameters and results.
+- **torchinfo and thop** to count parameters and FLOPs.
+- **torch.profiler** to find the slow parts of training.
+- **scikit-learn and matplotlib** for metrics and plots.
+- **Git** to save my code and report.
 
-I will report one table with four models (teacher, student without distillation, student with distillation, student with distillation + int8), showing test accuracy, file size in MB and CPU latency in ms. All runs will use my Lab 6 pipeline: a single YAML config, a fixed seed, checkpoints, and MLflow tracking of parameters, metrics and artifacts, so every result is reproducible.
+## How I Will Evaluate
+- Train each model with Adam and the same settings.
+- Measure latency as the median of 100 runs after warm-up, on the same computer.
+- Check model size from the saved file.
+- Run each model with a few different seeds to see if the results are stable.
+- Make a table and two plots (accuracy vs size, accuracy vs latency), then check which models meet the 50 ms and 5 MB limits.
+
+## Plan
+- **Week 1:** prepare the data and check its quality.
+- **Week 2:** train the three models.
+- **Week 3:** quantization and latency tests.
+- **Week 4:** plots, report and final commit.
+
+## Possible Problems
+- The dataset is small, so the attention model may overfit. I will use augmentation and early stopping.
+- Quantization may reduce accuracy. If it does, I will report that and try quantization-aware training.
+- The photos in the dataset may not match real lighting conditions. I will mention this as a limitation.
