@@ -32,12 +32,3 @@ If time allows, I will add light pruning as an extra experiment.
 ## Evaluation Plan
 
 I will report one table with four models (teacher, student without distillation, student with distillation, student with distillation + int8), showing test accuracy, file size in MB and CPU latency in ms. All runs will use my Lab 6 pipeline: a single YAML config, a fixed seed, checkpoints, and MLflow tracking of parameters, metrics and artifacts, so every result is reproducible.
-
-## Plan and Risks
-
-- **Week 1:** CIFAR-10 data loading, teacher training, baseline measurements.
-- **Week 2:** student baseline and distillation experiments.
-- **Week 3:** quantization, latency and size measurements, results table.
-- **Week 4:** analysis and final report.
-
-*Main risk:* training the teacher on CPU is slow. Mitigation: use a modest teacher size, a limited number of epochs, and the profiling and batch-size findings from this lab to choose efficient settings. If the 85% target is out of reach in the time available, I will report the best achieved accuracy (at least 80%) and analyse the gap.
